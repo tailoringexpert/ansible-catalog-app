@@ -1,0 +1,12 @@
+---   
+- name: "{{ tenant.name | upper }} | create directories for templates"
+  file:
+    path: "{{ template_dest }}"
+    state: directory    
+    mode: "0755"
+    
+- name: "{{ tenant.name | upper }} | install templates"
+  unarchive:
+    src: "{{ catalog.templates.src }}"
+    dest: "{{ template_dest }}"
+    remote_src: "{{ catalog.templates.remote_src | default('no') }}"

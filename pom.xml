@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>eu.tailoringexpert</groupId>
+  <artifactId>ansible-catalog-app</artifactId>
+  <packaging>pom</packaging>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <inceptionYear>2023</inceptionYear>
+
+  <organization>
+    <name>Michael Bädorf and others</name>
+    <url>https://www.tailoringexpert.eu</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Michael Baedorf</name>
+      <email>tailoringexpert@michael-baedorf.de</email>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:https://github.com/tailoringexpert/ansible-catalog-app.git</connection>
+    <developerConnection>scm:git:https://github.com/tailoringexpert/ansible-catalog-app.git</developerConnection>
+    <url>https://github.com/tailoringexpert/ansible-catalog-app</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>tailoringexpert-snapshots</id>
+      <!--suppress UnresolvedMavenProperty -->
+      <url>${tailoringexpert-snapshots.repository}</url>
+    </snapshotRepository>
+    <repository>
+      <id>tailoringexpert-releases</id>
+      <!--suppress UnresolvedMavenProperty -->
+      <url>${tailoringexpert-releases.repository}</url>
+    </repository>
+  </distributionManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <gitflow-maven-plugin.version>1.20.0</gitflow-maven-plugin.version>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.amashchenko.maven.plugin</groupId>
+        <artifactId>gitflow-maven-plugin</artifactId>
+        <version>${gitflow-maven-plugin.version}</version>
+        <configuration>
+          <verbose>true</verbose>
+          <featureSquash>true</featureSquash>
+          <postReleaseGoals>deploy</postReleaseGoals>
+          <gitFlowConfig>
+            <productionBranch>main</productionBranch>
+            <developmentBranch>develop</developmentBranch>
+            <featureBranchPrefix>feature/</featureBranchPrefix>
+            <releaseBranchPrefix>release/</releaseBranchPrefix>
+            <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+            <supportBranchPrefix>support/</supportBranchPrefix>
+            <versionTagPrefix>v</versionTagPrefix>
+            <origin>origin</origin>
+          </gitFlowConfig>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>

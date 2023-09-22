@@ -1,0 +1,23 @@
+---   
+- name: Create directory layout
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ group }}"
+  with_items: "{{ catalog_directories }}"
+  when: item | length > 0
+  ignore_errors: yes
+
+- include_tasks:
+    file: tenant.yml
+  loop: "{{ tenants }}"
+  loop_control:
+    loop_var: tenant
+    
+- name: ensure {{ user }} is owner of {{ catalog_app_home }} dirs and files
+  file: 
+    dest: "{{ catalog_app_home }}"
+    owner: "{{ user }}"
+    group: "{{ group }}"
+    recurse: yes

@@ -1,0 +1,27 @@
+---
+app_port: 8443
+app_protocol: https
+
+catalog_app_home: /app/resources/
+catalog_app_template_home: "{{ catalog_app_home }}/templates"
+catalog_app_import_home: "{{ catalog_app_home }}/catalog"
+
+
+catalog_directories: [
+  "{{ catalog_app_home }}",
+  "{{ catalog_app_template_home }}",
+  "{{ catalog_app_import_home }}"
+]  
+ 
+tenants: []  
+#  - name: tenant
+#    catalog: 
+#      - version: 8.2.1
+#        catalog:
+#          template: tenant/catalog-8.2.1.json
+#          remote_src: true
+#        templates:
+#          src: "{{ app_version }}/tenant/tailoringexpert-tenant-templates-0.0.5-SNAPSHOT-templates.zip"
+#          dest: "{{ app_template }}/tenant/"  
+#          remote_src: no  
+
