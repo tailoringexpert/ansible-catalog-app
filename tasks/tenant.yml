@@ -1,0 +1,25 @@
+---
+- name: "{{ tenant.name | upper }} | set tenant vars" 
+  set_fact:
+    template_dest: "{{ catalog_app_template_home }}/{{ tenant.name | lower }}"
+    catalog_dest: "{{ catalog_app_import_home }}/{{ tenant.name | lower }}"
+   
+- debug:
+    msg: " {{ item }}" 
+    verbosity: 1
+  with_items:
+    - "template destination dir: {{ template_dest }}"
+    - "catalog file destination dir: {{catalog_dest }}"
+ 
+- include_tasks: 
+    file: catalog.yml
+  loop: "{{ tenant.catalog }}"  
+  loop_control:
+    loop_var: catalog 
+
+- include_tasks:
+    file: template.yml
+  loop: "{{ tenant.catalog }}"  
+  loop_control:
+    loop_var: catalog 
+    

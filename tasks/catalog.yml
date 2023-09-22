@@ -1,0 +1,77 @@
+---
+- name: "{{ tenant.name | upper }} | create directories for catalog file"
+  file:
+    path: "{{ catalog_dest }}/{{ catalog.version }}"
+    state: directory    
+    mode: "0755"
+
+- block:
+  - name: "{{ tenant.name | upper }} | Create catalog version {{ catalog.version }}"
+    template:
+      src: "{{ tenant.name | lower }}/catalog-{{ catalog.version }}.json.j2"
+      dest: "{{ catalog_dest }}/{{ catalog.version }}/catalog.json"
+      mode: 0640 
+    register: catalog_json
+      
+  - set_fact:
+      catalog_file: 
+        src: "{{catalog_json.dest }}"
+        remote_src: true
+ 
+  when: catalog.catalog.template is defined   
+  
+- block:
+  - debug:
+      msg: "{{catalog.catalog.src | basename }}" 
+      
+  - name: "{{ tenant.name | upper }} | Copy catalog version {{ catalog.version }}"
+    copy:
+      src: "{{ catalog.catalog.src }}"
+      dest: "{{ catalog_dest }}/{{ catalog.version }}/catalog.json"
+      mode: 0640 
+      remote_src: "{{ catalog.catalog.remote_src | default('no') }}"
+  
+
+  - set_fact:
+      catalog_file: 
+        src: "{{ catalog_dest }}/{{ catalog.version }}/catalog.json"
+        remote_src: true        
+  
+  
+  when: catalog.catalog.template is undefined      
+  
+- name: "{{ tenant.name | upper }} | load catalog version list"
+  uri:
+    url: "{{ app.protocol }}://localhost:{{ app.port }}/api/catalog"
+    method: GET
+    status_code: 200
+    validate_certs: false
+    return_content: true
+    headers:
+      X-TENANT: "{{ tenant.name }}"  
+  register: catalogs     
+            
+- name:  "{{ tenant.name | upper }} | check existence of catalog version {{ catalog.version }}"
+  set_fact:
+    existing: "{{catalogs.json._embedded.baseCatalogVersions | default([]) | selectattr('version', 'eq', catalog.version)| list | length > 0}}"        
+        
+- name: "{{ tenant.name  | upper }} | import catalog version {{ catalog.version }}"
+  uri:
+    url: "{{ app.protocol }}://localhost:{{ app.port }}/api/catalog"
+    method: POST
+    src: "{{ catalog_file.src }}"
+    remote_src: "{{ catalog_file.remote_src | default('no') }}"
+    body_format: json
+    status_code: 201 
+    validate_certs: false
+    headers:
+      X-TENANT: "{{ tenant.name }}"  
+  when: not existing
+
+#- name: "{{ tenant.name | upper }} | delete imported catalog file"
+#  file:
+#    path: "{{ item }}"
+#    state: absent
+#  with_items:
+#    - "{{catalog_json.dest }}"
+    
