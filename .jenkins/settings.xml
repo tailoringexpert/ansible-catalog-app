@@ -3,24 +3,32 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
+    <localRepository>/home/.m2</localRepository>
+    
     <servers>
         <server>
             <id>tailoringexpert-releases</id>
-            <username>${NEXUS_USERNAME}</username>
-            <password>${NEXUS_PASSWORD}</password>
+            <username>${NEXUS_CREDENTIALS_USR}</username>
+            <password>${NEXUS_CREDENTIALS_PSW}</password>
+        </server>
+		<server>
+            <id>tailoringexpert-snapshots</id>
+            <username>${NEXUS_CREDENTIALS_USR}</username>
+            <password>${NEXUS_CREDENTIALS_PSW}</password>
         </server>
     </servers>
 
     <profiles>
         <profile>
             <id>nexus</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <tailoringexpert-releases.repository>${NEXUS_RELEASEURL}</tailoringexpert-releases.repository>
+				<tailoringexpert-snapshots.repository>${NEXUS_SNAPSHOTURL}</tailoringexpert-snapshots.repository>
             </properties>
         </profile>
     </profiles>
 
-    <activeProfiles>
-        <activeProfile>nexus</activeProfile>
-    </activeProfiles>
 </settings>
